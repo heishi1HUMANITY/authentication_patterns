@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  authenticator:
+    build: 
+      context: .
+      dockerfile: authenticator.dockerfile
+    tty: true
+    environment:
+      - PORT=8000
+    ports:
+      - "8000:8000"
+    command: ./app.js
+
+  app:
+    build: 
+      context: .
+      dockerfile: app.dockerfile
+    tty: true
+    environment:
+      - PORT=9000
+    ports:
+      - "9000:9000"
+    command: ./app.js
+
+  redis:
+    image: redis:7.0-rc-alpine
+
