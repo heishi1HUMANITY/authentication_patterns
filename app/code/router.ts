@@ -25,7 +25,7 @@ ROUTER.use(session({
   store: new REDIS_STORE({ client: REDIS_CLIENT }),
 }));
 
-ROUTER.get('/', (req, res) => {
+ROUTER.get('/', (req, res): void => {
   if (typeof req.session.username === 'undefined') {
     res.status(401).send();
     return;

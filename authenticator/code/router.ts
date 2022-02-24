@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { USERDATA } from "./userdata";
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
@@ -27,8 +27,8 @@ ROUTER.use(session({
   store: new REDIS_STORE({ client: REDIS_CLIENT }),
 }));
 
-ROUTER.post('/signin', async (req: Request, res: Response) => {
-  const storedUserData = USERDATA.find(v => v.username === req.body.username);
+ROUTER.post('/signin', async (req: Request, res: Response): Promise<void> => {
+  const storedUserData: { username: string, password: string } | undefined = USERDATA.find(v => v.username === req.body.username);
   if (typeof storedUserData === 'undefined') {
     res.status(401).send();
     return;
@@ -41,7 +41,7 @@ ROUTER.post('/signin', async (req: Request, res: Response) => {
   res.status(406).send();
 });
 
-ROUTER.get('/signout', (req, res) => {
+ROUTER.get('/signout', (req, res): void => {
   const username = req.session.username;
   req.session.destroy((err => {
     res.status(500).send();

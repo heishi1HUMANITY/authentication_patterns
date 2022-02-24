@@ -1,10 +1,11 @@
 #! /usr/bin/env node
 
 import express from 'express';
+import { Express } from 'express';
 import cors from 'cors';
 import { ROUTER } from './router';
 
-const app = express();
+const app: Express = express();
 app.use(cors({
   origin: '*'
 }));
