@@ -1,6 +1,11 @@
-# 分散セッション
-![分散セッション](https://user-images.githubusercontent.com/52996208/155519746-15c73f82-2465-4946-b8f3-4c87670d3a79.png "分散セッション")
+# マイクロサービスにおける認証の実装パターン
 
-* セッションストア
-* すべてのサービスでセッションID・セッションストレージを共用
-* セッションIDにはユーザ情報を含まない
+* セッション方式  
+  ユーザの情報をサーバ側に保存し、クライアントにセッションID(ユーザ情報を含まない)を持たせる。
+  * [分散セッション](https://github.com/heishi1HUMANITY/authentication_patterns/tree/distributed_session)
+  * [SSO](https://github.com/heishi1HUMANITY/authentication_patterns/tree/sso)
+
+* トークン方式
+  サーバのシークレットで署名したトークン(ユーザ情報を含む)をクライアントに持たせる。
+  * [JWT]()
+  * [JWT + API Gateway]()
