@@ -1,6 +1,7 @@
-# 分散セッション
-![分散セッション](https://user-images.githubusercontent.com/52996208/155519746-15c73f82-2465-4946-b8f3-4c87670d3a79.png "分散セッション")
+# Single Sign On(SSO)
+![SSO](https://user-images.githubusercontent.com/52996208/159438480-3b371dc7-23c0-4616-bf2c-e0ec433e808c.png "SSO")
 
 * セッションストア
-* すべてのサービスでセッションID・セッションストレージを共用
+* authenticatorのみでセッションを管理
+* appはセッションIDをauthenticatorに対して問い合わせ、ユーザIDを取得する
 * セッションIDにはユーザ情報を含まない
