@@ -1,7 +1,5 @@
 import { Router, Request, Response } from "express";
 import { USERDATA } from "./userdata";
-import Redis from 'ioredis';
-import connectRedis from 'connect-redis';
 import session from 'express-session';
 import { compare } from 'bcrypt';
 
@@ -13,9 +11,6 @@ declare module 'express-session' {
 
 export const ROUTER = Router();
 
-const REDIS_STORE = connectRedis(session);
-const REDIS_CLIENT = new Redis(parseInt(process.env.REDIS_PORT), 'redis');
-
 ROUTER.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -23,8 +18,7 @@ ROUTER.use(session({
   cookie: {
     httpOnly: false,
     maxAge: 1000 * 60 * 30
-  },
-  store: new REDIS_STORE({ client: REDIS_CLIENT }),
+  }
 }));
 
 ROUTER.post('/signin', async (req: Request, res: Response): Promise<void> => {
@@ -39,9 +33,10 @@ ROUTER.post('/signin', async (req: Request, res: Response): Promise<void> => {
     return;
   }
   res.status(406).send();
+  return;
 });
 
-ROUTER.get('/signout', (req, res): void => {
+ROUTER.get('/signout', (req: Request, res: Response): void => {
   const username = req.session.username;
   req.session.destroy((err => {
     res.status(500).send();
@@ -49,4 +44,10 @@ ROUTER.get('/signout', (req, res): void => {
   }));
   res.send(username);
   return
+});
+
+ROUTER.get('/verify', (req: Request, res: Response) => {
+  const username = req.session.username;
+  res.json({ username }).send();
+  return;
 });

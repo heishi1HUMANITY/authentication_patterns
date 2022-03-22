@@ -1,35 +1,26 @@
 import { Router } from 'express';
-import Redis from 'ioredis';
-import connectRedis from 'connect-redis';
-import session from 'express-session';
+import fetch from 'node-fetch';
 
-declare module 'express-session' {
-  interface SessionData {
-    username: string
-  }
+interface authenticatorResponse {
+  username?: string
 }
 
 export const ROUTER = Router();
 
-const REDIS_STORE = connectRedis(session);
-const REDIS_CLIENT = new Redis(parseInt(process.env.REDIS_PORT), 'redis');
+ROUTER.get('/', async (req, res): Promise<void> => {
+  const cookie = req.headers['cookie'];
+  const fetchRes = await fetch('http://authenticator:8000/verify', {
+    method: 'get',
+    headers: {
+      cookie
+    }
+  });
 
-ROUTER.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: false,
-    maxAge: 1000 * 60 * 30
-  },
-  store: new REDIS_STORE({ client: REDIS_CLIENT }),
-}));
-
-ROUTER.get('/', (req, res): void => {
-  if (typeof req.session.username === 'undefined') {
+  const fetchJson: authenticatorResponse = await fetchRes.json();
+  if (typeof fetchJson.username === 'undefined') {
     res.status(401).send();
     return;
   }
-  res.send(req.session.username);
+  res.send(fetchJson.username);
   return
 });

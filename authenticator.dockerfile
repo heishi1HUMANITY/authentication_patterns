@@ -2,7 +2,6 @@ FROM node:alpine
 
 WORKDIR /workspace
 
-ENV REDIS_PORT 6379
 ENV SESSION_SECRET "sercret"
 
 COPY ./authenticator /workspace
