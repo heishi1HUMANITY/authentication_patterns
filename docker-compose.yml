@@ -22,7 +22,3 @@ services:
     ports:
       - "9000:9000"
     command: ./app.js
-
-  redis:
-    image: redis:7.0-rc-alpine
-

@@ -1,35 +1,32 @@
 import { Router } from 'express';
-import Redis from 'ioredis';
-import connectRedis from 'connect-redis';
-import session from 'express-session';
-
-declare module 'express-session' {
-  interface SessionData {
-    username: string
-  }
-}
+import jwt from 'jsonwebtoken'
+import { readFile } from 'fs/promises';
+import path from 'path';
 
 export const ROUTER = Router();
 
-const REDIS_STORE = connectRedis(session);
-const REDIS_CLIENT = new Redis(parseInt(process.env.REDIS_PORT), 'redis');
+const PUBLIC_KEY = await readFile(path.join('.', 'key', 'public.pem'));
 
-ROUTER.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: false,
-    maxAge: 1000 * 60 * 30
-  },
-  store: new REDIS_STORE({ client: REDIS_CLIENT }),
-}));
+declare module 'jsonwebtoken' {
+  interface JwtPayload {
+    id?: string
+  }
+
+  function verify(token: string, secretOrPublicKey: jwt.Secret, options?: (jwt.VerifyOptions & { complete?: false | undefined; }) | undefined): jwt.JwtPayload
+}
 
 ROUTER.get('/', (req, res): void => {
-  if (typeof req.session.username === 'undefined') {
-    res.status(401).send();
-    return;
+  const authorization = req.headers['authorization'];
+  if (typeof authorization !== 'undefined' && authorization.split(' ')[0].toLowerCase() === 'bearer') {
+    const token = authorization.split(' ')[1];
+    try {
+      const payload: jwt.JwtPayload = jwt.verify(token, PUBLIC_KEY, { algorithms: ['ES256'] });
+      res.status(200).send(payload.id);
+    } catch (err) {
+      res.status(401).send();
+      return;
+    }
   }
-  res.send(req.session.username);
-  return
+  res.status(401).send();
+  return;
 });
