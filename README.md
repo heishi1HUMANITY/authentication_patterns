@@ -5,7 +5,7 @@
   * [分散セッション](https://github.com/heishi1HUMANITY/authentication_patterns/tree/distributed_session)
   * [SSO](https://github.com/heishi1HUMANITY/authentication_patterns/tree/sso)
 
-* トークン方式
+* トークン方式  
   サーバのシークレットで署名したトークン(ユーザ情報を含む)をクライアントに持たせる。
-  * [JWT]()
+  * [JWT](https://github.com/heishi1HUMANITY/authentication_patterns/tree/jwt)
   * [JWT + API Gateway]()
