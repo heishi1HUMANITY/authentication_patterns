@@ -8,7 +8,7 @@ interface authenticatorResponse {
 export const ROUTER = Router();
 
 ROUTER.get('/', async (req, res): Promise<void> => {
-  const cookie = req.headers['cookie'];
+  const cookie = req.headers['cookie'] ?? '';
   const fetchRes = await fetch('http://authenticator:8000/verify', {
     method: 'get',
     headers: {
