@@ -8,4 +8,4 @@
 * トークン方式  
   サーバのシークレットで署名したトークン(ユーザ情報を含む)をクライアントに持たせる。
   * [JWT](https://github.com/heishi1HUMANITY/authentication_patterns/tree/jwt)
-  * [JWT + API Gateway]()
+  * [JWT + API Gateway](https://github.com/heishi1HUMANITY/authentication_patterns/tree/jwt%2Bapigateway)
