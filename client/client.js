@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 
 // FIRST: sign in as a test user(username: test, password: test)
-// You can get a JWT
+// You can get a session id in a cookie
 console.log(`// FIRST: sign in as a test user(username: test, password: test)
-// You can get a JWT`)
-const testUserFetchResult = await fetch('http://localhost:8000/signin', {
+// You can get a session id in a cookied`)
+const testUserFetchResult = await fetch('http://localhost:8000/authenticator/signin', {
   method: 'post',
   headers: {
     'content-type': 'application/json',
@@ -14,27 +14,24 @@ const testUserFetchResult = await fetch('http://localhost:8000/signin', {
     password: 'test',
   })
 });
-const testUserJWT = (await testUserFetchResult.json()).token;
+const testUserSessionID = testUserFetchResult.headers.get('set-cookie').split(';')[0];
 console.log(testUserFetchResult.status);
-console.log(`Your JWT is: ${testUserJWT}`);
+console.log(`Your session id is: ${testUserSessionID}`);
 
-// SECOND: access application server with JWT
+// SECOND: access application server with your session id
 console.log(`
-// SECOND: access application server with JWT`)
-const applicationFetchResultWithJWT = await fetch('http://localhost:9000', {
+// SECOND: access application server with your session id`)
+const applicationFetchResultwithAuthorizedSessionID = await fetch('http://localhost:8000/app', {
   method: 'get',
   headers: {
-    authorization: `Bearer ${testUserJWT}`
+    cookie: testUserSessionID,
   },
 });
-const applicationServerResponseTextWithJWT = await applicationFetchResultWithJWT.text();
-console.log(applicationFetchResultWithJWT.status);
-console.log(`Response: ${applicationServerResponseTextWithJWT}`);
+const applicationServerResponseTextWithAuthorizedSessionID = await applicationFetchResultwithAuthorizedSessionID.text();
+console.log(`Response: ${applicationServerResponseTextWithAuthorizedSessionID}`);
 
-// THIRD: access application server without JWT
+// THIRD: access application server without session id
 console.log(`
-// THIRD: access application server without JWT`)
-const applicationFetchResultWithoutJWT = await fetch('http://localhost:9000', {
-  method: 'get',
-});
-console.log(`Application Server Status Code: ${applicationFetchResultWithoutJWT.status}`);
+// THIRD: access application server without session id`)
+const applicationFetchResultAfterSignOut = await fetch('http://localhost:8000/app');
+console.log(`Application Server Status Code: ${applicationFetchResultAfterSignOut.status}`);

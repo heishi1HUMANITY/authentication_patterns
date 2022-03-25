@@ -8,8 +8,6 @@ services:
     tty: true
     environment:
       - PORT=8000
-    ports:
-      - "8000:8000"
     command: ./app.js
 
   app:
@@ -18,7 +16,17 @@ services:
       dockerfile: app.dockerfile
     tty: true
     environment:
-      - PORT=9000
+      - PORT=8000
+    command: ./app.js
+
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway.dockerfile
+    tty: true
+    environment:
+      - PORT=8000
+      - SESSION_SECRET=SECRET
     ports:
-      - "9000:9000"
+      - "8000:8000"
     command: ./app.js
