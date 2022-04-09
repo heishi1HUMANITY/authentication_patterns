@@ -1,5 +1,5 @@
 # JWT + API Gateway
-![JWT + API Gateway](https://user-images.githubusercontent.com/52996208/160060840-e6d9a189-2490-4ff8-982c-1d231ce123bc.png "JWT + API Gateway")
+![JWT + API Gateway](https://raw.githubusercontent.com/heishi1HUMANITY/assets/main/JWT%2BAPIGateway.drawio.png "JWT + API Gateway")
 
 * セッション方式+トークン方式
 * 認証サーバのシークレット(秘密鍵)で署名したトークンをgatewayに保持させる
